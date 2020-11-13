@@ -20,7 +20,7 @@ services:
     hostname: beacon-chain
     depends_on:
       - geth
-    command: --datadir=/data --rpc-host=0.0.0.0 --monitoring-host=0.0.0.0 --http-web3provider=http://geth:8545 --medalla
+    command: --datadir=/data --rpc-host=0.0.0.0 --monitoring-host=0.0.0.0 --http-web3provider=http://geth:8545 --medalla --accept-terms-of-use
     ports:
       - 127.0.0.1:4000:4000
       - 13000:13000/tcp
