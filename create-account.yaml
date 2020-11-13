@@ -3,10 +3,9 @@ services:
   validator-import-launchpad:
     container_name: validator-import-launchpad
     image: gcr.io/prysmaticlabs/prysm/validator:stable
-    command: accounts import --keys-dir="/launchpad/validator_keys" --wallet-dir="/data/wallets"  --datadir=/data/db
+    command: accounts import --keys-dir="/launchpad/validator_keys" --wallet-dir="/data/wallets"
     volumes:
       - ./launchpad:/launchpad
-      - ${DOCKER_VOL_PATH}/validator:/data
   validator-list-accounts:
     container_name: validator_list_accounts
     image: gcr.io/prysmaticlabs/prysm/validator:stable
