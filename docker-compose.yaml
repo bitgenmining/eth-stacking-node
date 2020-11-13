@@ -44,9 +44,8 @@ services:
     hostname: slasher
     depends_on:
       - beacon
-    command: --config-file=/config/slasher.yaml
+    command: --beacon-rpc-provider=beacon:4000 --datadir=/data/db --monitoring-host=0.0.0.0
     volumes:
-      - ./slasher/slasher.yaml:/config/slasher.yaml:ro
       - ${DOCKER_VOL_PATH}/slasher:/data
   prometheus:
     container_name: prometheus
