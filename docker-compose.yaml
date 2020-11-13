@@ -1,0 +1,74 @@
+version: "3.7"
+
+services:
+  geth:
+    container_name: geth
+    image: ethereum/client-go:v1.9.14
+    restart: always
+    hostname: geth
+    command: --goerli --rpc --rpcport=8545 --rpcaddr=0.0.0.0 --rpcvhosts="*" --allow-insecure-unlock --rpcapi="db,eth,net,web3,personal"
+    ports:
+      - 30303:30303/tcp
+      - 30303:30303/udp
+      - 127.0.0.1:8545:8545
+    volumes:
+      - ${DOCKER_VOL_PATH}/geth:/root/.ethereum
+  beacon:
+    container_name: beacon-chain
+    image: gcr.io/prysmaticlabs/prysm/beacon-chain:stable
+    restart: always
+    hostname: beacon-chain
+    depends_on:
+      - geth
+    command: --datadir=/data --rpc-host=0.0.0.0 --monitoring-host=0.0.0.0 --http-web3provider=http://geth:8545 --medalla
+    ports:
+      - 127.0.0.1:4000:4000
+      - 13000:13000/tcp
+      - 12000:12000/udp
+    volumes:
+      - ${DOCKER_VOL_PATH}/beacon:/data
+  validator:
+    container_name: validator
+    image: gcr.io/prysmaticlabs/prysm/validator:stable
+    restart: on-failure
+    hostname: validator
+    depends_on:
+      - beacon
+    command: --config-file=/config/validator.yaml
+    volumes:
+        - ${DOCKER_VOL_PATH}/validator:/data
+  slasher:
+    container_name: slasher
+    image: gcr.io/prysmaticlabs/prysm/slasher:stable
+    restart: always
+    hostname: slasher
+    depends_on:
+      - beacon
+    command: --config-file=/config/slasher.yaml
+    volumes:
+      - ./slasher/slasher.yaml:/config/slasher.yaml:ro
+      - ${DOCKER_VOL_PATH}/slasher:/data
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v2.19.0
+    user: root
+    restart: on-failure
+    hostname: prometheus
+    command: --storage.tsdb.retention.time=31d --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - 127.0.0.1:9090:9090
+    volumes:
+      - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
+      - ${DOCKER_VOL_PATH}/prometheus:/prometheus
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:7.0.3
+    restart: on-failure
+    hostname: grafana
+    depends_on:
+      - prometheus
+    ports:
+      - 127.0.0.1:3000:3000
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ${DOCKER_VOL_PATH}/grafana:/var/lib/grafana
