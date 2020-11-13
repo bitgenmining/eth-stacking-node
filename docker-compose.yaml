@@ -45,7 +45,7 @@ services:
     hostname: slasher
     depends_on:
       - beacon
-    command: --beacon-rpc-provider=beacon:4000 --datadir=/data/db --monitoring-host=0.0.0.0
+    command: --beacon-rpc-provider=beacon:4000 --datadir=/data/db --monitoring-host=0.0.0.0 --accept-terms-of-use
     volumes:
       - ${DOCKER_VOL_PATH}/slasher:/data
   prometheus:
