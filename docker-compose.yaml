@@ -34,7 +34,7 @@ services:
     hostname: validator
     depends_on:
       - beacon
-    command: --config-file=/config/validator.yaml
+    command: --beacon-rpc-provider=beacon:4000 --wallet-dir=/data/wallet --datadir=/data/db --medalla
     volumes:
         - ${DOCKER_VOL_PATH}/validator:/data
   slasher:
