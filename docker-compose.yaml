@@ -68,7 +68,7 @@ services:
     depends_on:
       - prometheus
     ports:
-      - 127.0.0.1:3000:3000
+      - 3000:3000
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning
       - ${DOCKER_VOL_PATH}/grafana:/var/lib/grafana
