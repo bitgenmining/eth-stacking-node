@@ -20,7 +20,7 @@ services:
     hostname: beacon-chain
     depends_on:
       - geth
-    command: --datadir=/data --rpc-host=0.0.0.0 --monitoring-host=0.0.0.0 --http-web3provider=http://geth:8545 --medalla --accept-terms-of-use
+    command: --datadir=/data --rpc-host=0.0.0.0 --monitoring-host=0.0.0.0 --http-web3provider=http://geth:8545 --accept-terms-of-use --${ETH_NETWORK}
     ports:
       - 127.0.0.1:4000:4000
       - 13000:13000/tcp
@@ -34,7 +34,7 @@ services:
     hostname: validator
     depends_on:
       - beacon
-    command: --beacon-rpc-provider=beacon:4000 --wallet-dir=/data/wallets --datadir=/data/db --medalla --accept-terms-of-use --wallet-password-file="/launchpad/wallet-password"
+    command: --beacon-rpc-provider=beacon:4000 --wallet-dir=/data/wallets --datadir=/data/db --accept-terms-of-use --wallet-password-file="/launchpad/wallet-password" --${ETH_NETWORK}
     volumes:
         - ./launchpad:/launchpad
         - ${DOCKER_VOL_PATH}/validator:/data
@@ -45,7 +45,7 @@ services:
     hostname: slasher
     depends_on:
       - beacon
-    command: --beacon-rpc-provider=beacon:4000 --datadir=/data/db --monitoring-host=0.0.0.0 --accept-terms-of-use
+    command: --beacon-rpc-provider=beacon:4000 --datadir=/data/db --monitoring-host=0.0.0.0 --accept-terms-of-use --${ETH_NETWORK}
     volumes:
       - ${DOCKER_VOL_PATH}/slasher:/data
   prometheus:
