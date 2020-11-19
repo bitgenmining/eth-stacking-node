@@ -15,7 +15,7 @@ services:
       - ${DOCKER_VOL_PATH}/geth:/root/.ethereum
   beacon:
     container_name: beacon-chain
-    image: gcr.io/prysmaticlabs/prysm/beacon-chain:stable
+    image: gcr.io/prysmaticlabs/prysm/beacon-chain:${PRYSM_VERSION}
     restart: always
     hostname: beacon-chain
     depends_on:
@@ -29,7 +29,7 @@ services:
       - ${DOCKER_VOL_PATH}/beacon:/data
   validator:
     container_name: validator
-    image: gcr.io/prysmaticlabs/prysm/validator:stable
+    image: gcr.io/prysmaticlabs/prysm/validator:${PRYSM_VERSION}
     restart: on-failure
     hostname: validator
     depends_on:
@@ -40,7 +40,7 @@ services:
         - ${DOCKER_VOL_PATH}/validator:/data
   slasher:
     container_name: slasher
-    image: gcr.io/prysmaticlabs/prysm/slasher:stable
+    image: gcr.io/prysmaticlabs/prysm/slasher:${PRYSM_VERSION}
     restart: always
     hostname: slasher
     depends_on:
