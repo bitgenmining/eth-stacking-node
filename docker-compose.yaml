@@ -34,7 +34,7 @@ services:
     hostname: validator
     depends_on:
       - beacon
-    command: --beacon-rpc-provider=beacon:4000 --wallet-dir=/data/wallets --datadir=/data/db --accept-terms-of-use --wallet-password-file="/launchpad/wallet-password" --${ETH_NETWORK}
+    command: --beacon-rpc-provider=beacon:4000 --wallet-dir=/data/wallets --datadir=/data/db --monitoring-host=0.0.0.0 --accept-terms-of-use --wallet-password-file="/launchpad/wallet-password" --${ETH_NETWORK}
     volumes:
         - ./launchpad:/launchpad
         - ${DOCKER_VOL_PATH}/validator:/data
