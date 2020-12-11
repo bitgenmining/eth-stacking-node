@@ -6,7 +6,7 @@ services:
     image: ethereum/client-go:v1.9.14
     restart: always
     hostname: geth
-    command: --goerli --rpc --rpcport=8545 --rpcaddr=0.0.0.0 --rpcvhosts="*" --allow-insecure-unlock --rpcapi="db,eth,net,web3,personal"
+    command: ${GETH_NETWORK} --rpc --rpcport=8545 --rpcaddr=0.0.0.0 --rpcvhosts="*" --allow-insecure-unlock --rpcapi="db,eth,net,web3,personal"
     ports:
       - 30303:30303/tcp
       - 30303:30303/udp
@@ -38,6 +38,17 @@ services:
     volumes:
         - ./launchpad:/launchpad
         - ${DOCKER_VOL_PATH}/validator:/data
+  validator-2:
+    container_name: validator-2
+    image: gcr.io/prysmaticlabs/prysm/validator:${PRYSM_VERSION}
+    restart: on-failure
+    hostname: validator-2
+    depends_on:
+      - beacon
+    command: --beacon-rpc-provider=beacon:4000 --wallet-dir=/data/wallets --datadir=/data/db --monitoring-host=0.0.0.0 --accept-terms-of-use --wallet-password-file="/launchpad/wallet-password" --${ETH_NETWORK}
+    volumes:
+        - ./launchpad:/launchpad
+        - ${DOCKER_VOL_PATH}/validator-2:/data
   slasher:
     container_name: slasher
     image: gcr.io/prysmaticlabs/prysm/slasher:${PRYSM_VERSION}
